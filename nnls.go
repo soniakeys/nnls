@@ -4,7 +4,7 @@ package nnls
 
 import "github.com/skelterjohn/go.matrix"
 
-func NNLS(x [][]float64, y []float64, n int) ([]float64, int, error) {
+func SCAIterate(x [][]float64, y []float64, n int) ([]float64, int, error) {
 	A := matrix.MakeDenseMatrixStacked(x)
 	b := matrix.MakeDenseMatrix(y, len(y), 1)
 	AT := A.Transpose()
@@ -16,7 +16,7 @@ func NNLS(x [][]float64, y []float64, n int) ([]float64, int, error) {
 	μ := m.Array()
 	H, _ := AT.TimesDense(A)
 	Hd := H.DiagonalCopy()
-	Ha := H.Arrays() // (H is symmetric)
+	Ha := H.Arrays()                // (H is symmetric)
 	β := make([]float64, len(x[0])) // return value
 	if n < 0 {
 		n = 10000
@@ -43,4 +43,46 @@ func NNLS(x [][]float64, y []float64, n int) ([]float64, int, error) {
 		}
 	}
 	return β, n, nil
+}
+
+func SCAKTT(x [][]float64, y []float64, ε float64) ([]float64, int, error) {
+	A := matrix.MakeDenseMatrixStacked(x)
+	b := matrix.MakeDenseMatrix(y, len(y), 1)
+	AT := A.Transpose()
+	m, err := AT.TimesDense(b)
+	if err != nil {
+		return nil, 0, err
+	}
+	m.Scale(-1)
+	μ := m.Array()
+	H, _ := AT.TimesDense(A)
+	Hd := H.DiagonalCopy()
+	Ha := H.Arrays()                // (H is symmetric)
+	β := make([]float64, len(x[0])) // return value
+	nε := -ε
+	i := 0
+i:
+	for ; ; i++ {
+		for k, βk := range β {
+			b := βk - μ[k]/Hd[k]
+			if b < 0 {
+				b = 0
+			}
+			β[k] = b
+			b -= βk
+			for j, h := range Ha[k] {
+				μ[j] += b * h
+			}
+		}
+		for k, m := range μ {
+			if m < nε {
+				continue i
+			}
+			if β[k] > 0 && m > ε {
+				continue i
+			}
+		}
+		break
+	}
+	return β, i + 1, nil
 }
