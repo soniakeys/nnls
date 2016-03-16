@@ -7,7 +7,6 @@ import "github.com/skelterjohn/go.matrix"
 func NNLS(x [][]float64, y []float64, n int) ([]float64, int, error) {
 	A := matrix.MakeDenseMatrixStacked(x)
 	b := matrix.MakeDenseMatrix(y, len(y), 1)
-	β := make([]float64, len(x[0])) // return value
 	AT := A.Transpose()
 	m, err := AT.TimesDense(b)
 	if err != nil {
@@ -15,12 +14,10 @@ func NNLS(x [][]float64, y []float64, n int) ([]float64, int, error) {
 	}
 	m.Scale(-1)
 	μ := m.Array()
-	H, err := AT.TimesDense(A)
-	if err != nil {
-		return nil, 0, err
-	}
+	H, _ := AT.TimesDense(A)
 	Hd := H.DiagonalCopy()
 	Ha := H.Arrays() // (H is symmetric)
+	β := make([]float64, len(x[0])) // return value
 	if n < 0 {
 		n = 10000
 	}
