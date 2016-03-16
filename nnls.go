@@ -1,3 +1,5 @@
+// public domain
+
 package nnls
 
 import "github.com/skelterjohn/go.matrix"

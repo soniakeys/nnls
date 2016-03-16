@@ -1,3 +1,5 @@
+// public domain
+
 package nnls_test
 
 import (
