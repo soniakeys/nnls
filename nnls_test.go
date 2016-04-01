@@ -22,7 +22,7 @@ func ExampleSCALimit() {
 		A[i] = []float64{h * h, h, 1} // Vandermonde
 	}
 	β, n, _ := nnls.SCALimit(A, weight, -1)
-	fmt.Printf("coefficents:  %.2f\n", β)
+	fmt.Printf("coefficients:  %.2f\n", β)
 	fmt.Println("iterations:  ", n)
 	fmt.Println("measured  modeled    error")
 	for i, h := range height {
@@ -31,7 +31,7 @@ func ExampleSCALimit() {
 		fmt.Printf("%8.2f %8.2f %8.2f\n", w, m, w-m)
 	}
 	// Output:
-	// coefficents:  [18.61 0.00 11.15]
+	// coefficients:  [18.61 0.00 11.15]
 	// iterations:   7343
 	// measured  modeled    error
 	//    52.21    51.36     0.85
@@ -57,7 +57,7 @@ func ExampleSCAKKT() {
 		A[i] = []float64{h * h, h, 1}
 	}
 	β, n, _ := nnls.SCAKKT(A, weight, .01)
-	fmt.Printf("coefficents:  %.2f\n", β)
+	fmt.Printf("coefficients:  %.2f\n", β)
 	fmt.Println("iterations:  ", n)
 	fmt.Println("measured  modeled    error")
 	for i, h := range height {
@@ -66,7 +66,7 @@ func ExampleSCAKKT() {
 		fmt.Printf("%8.2f %8.2f %8.2f\n", w, m, w-m)
 	}
 	// Output:
-	// coefficents:  [18.60 0.00 11.16]
+	// coefficients:  [18.60 0.00 11.16]
 	// iterations:   5951
 	// measured  modeled    error
 	//    52.21    51.36     0.85
