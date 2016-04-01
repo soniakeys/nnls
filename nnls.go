@@ -4,7 +4,7 @@ package nnls
 
 import "github.com/skelterjohn/go.matrix"
 
-func SCAIterate(x [][]float64, y []float64, n int) ([]float64, int, error) {
+func SCALimit(x [][]float64, y []float64, n int) ([]float64, int, error) {
 	A := matrix.MakeDenseMatrixStacked(x)
 	b := matrix.MakeDenseMatrix(y, len(y), 1)
 	AT := A.Transpose()
@@ -45,7 +45,7 @@ func SCAIterate(x [][]float64, y []float64, n int) ([]float64, int, error) {
 	return β, n, nil
 }
 
-func SCAKTT(x [][]float64, y []float64, ε float64) ([]float64, int, error) {
+func SCAKKT(x [][]float64, y []float64, ε float64) ([]float64, int, error) {
 	A := matrix.MakeDenseMatrixStacked(x)
 	b := matrix.MakeDenseMatrix(y, len(y), 1)
 	AT := A.Transpose()
@@ -70,6 +70,9 @@ i:
 			}
 			β[k] = b
 			b -= βk
+			if b == 0 {
+				continue
+			}
 			for j, h := range Ha[k] {
 				μ[j] += b * h
 			}

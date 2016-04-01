@@ -16,12 +16,12 @@ var (
 		61.29, 63.11, 64.47, 66.28, 68.10, 69.92, 72.19, 74.46}
 )
 
-func ExampleSCAIterate() {
+func ExampleSCALimit() {
 	A := make([][]float64, len(height))
 	for i, h := range height {
 		A[i] = []float64{h * h, h, 1} // Vandermonde
 	}
-	β, n, _ := nnls.SCAIterate(A, weight, -1)
+	β, n, _ := nnls.SCALimit(A, weight, -1)
 	fmt.Printf("coefficents:  %.2f\n", β)
 	fmt.Println("iterations:  ", n)
 	fmt.Println("measured  modeled    error")
@@ -51,12 +51,12 @@ func ExampleSCAIterate() {
 	//    74.46    73.47     0.99
 }
 
-func ExampleSCAKTT() {
+func ExampleSCAKKT() {
 	A := make([][]float64, len(height))
 	for i, h := range height {
 		A[i] = []float64{h * h, h, 1}
 	}
-	β, n, _ := nnls.SCAKTT(A, weight, .01)
+	β, n, _ := nnls.SCAKKT(A, weight, .01)
 	fmt.Printf("coefficents:  %.2f\n", β)
 	fmt.Println("iterations:  ", n)
 	fmt.Println("measured  modeled    error")
