@@ -16,12 +16,12 @@ var (
 		61.29, 63.11, 64.47, 66.28, 68.10, 69.92, 72.19, 74.46}
 )
 
-func ExampleSCALimit() {
+func ExampleSCA() {
 	A := make([][]float64, len(height))
 	for i, h := range height {
-		A[i] = []float64{h * h, h, 1} // Vandermonde
+		A[i] = []float64{h * h, h, 1}
 	}
-	β, n, _ := nnls.SCALimit(A, weight, -1)
+	β, n, _ := nnls.SCA(A, weight, .01)
 	fmt.Printf("coefficients:  %.2f\n", β)
 	fmt.Println("iterations:  ", n)
 	fmt.Println("measured  modeled    error")
@@ -30,9 +30,8 @@ func ExampleSCALimit() {
 		w := weight[i]
 		fmt.Printf("%8.2f %8.2f %8.2f\n", w, m, w-m)
 	}
-	// Output:
 	// coefficients:  [18.61 0.00 11.15]
-	// iterations:   7343
+	// iterations:   6084
 	// measured  modeled    error
 	//    52.21    51.36     0.85
 	//    53.12    53.02     0.10
@@ -84,4 +83,39 @@ func ExampleSCAKKT() {
 	//    69.92    70.11    -0.19
 	//    72.19    71.44     0.75
 	//    74.46    73.46     1.00
+}
+
+func ExampleSCALimit() {
+	A := make([][]float64, len(height))
+	for i, h := range height {
+		A[i] = []float64{h * h, h, 1} // Vandermonde
+	}
+	β, n, _ := nnls.SCALimit(A, weight, -1)
+	fmt.Printf("coefficients:  %.2f\n", β)
+	fmt.Println("iterations:  ", n)
+	fmt.Println("measured  modeled    error")
+	for i, h := range height {
+		m := h*(h*β[0]+β[1]) + β[2]
+		w := weight[i]
+		fmt.Printf("%8.2f %8.2f %8.2f\n", w, m, w-m)
+	}
+	// Output:
+	// coefficients:  [18.61 0.00 11.15]
+	// iterations:   7343
+	// measured  modeled    error
+	//    52.21    51.36     0.85
+	//    53.12    53.02     0.10
+	//    54.48    54.14     0.34
+	//    55.84    55.86    -0.02
+	//    57.20    57.02     0.18
+	//    58.57    58.79    -0.22
+	//    59.93    60.59    -0.66
+	//    61.29    61.81    -0.52
+	//    63.11    63.67    -0.56
+	//    64.47    64.93    -0.46
+	//    66.28    66.84    -0.56
+	//    68.10    68.14    -0.04
+	//    69.92    70.11    -0.19
+	//    72.19    71.44     0.75
+	//    74.46    73.47     0.99
 }
